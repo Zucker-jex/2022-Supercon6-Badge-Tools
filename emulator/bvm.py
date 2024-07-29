@@ -9,19 +9,21 @@ import tkinter as tk
 from PIL import Image, ImageTk
 import csv
 
-def get_bit(n, i):  
+
+def get_bit(n, i):
     """returns the i'th bit of the number n (in binary)"""
-    if n & (1<<i):
+    if n & (1 << i):
         return 1
     else:
         return 0
+
 
 class BVM:
     def __init__(self):
         self.badge = Badge()
         self.guiScale = 3
-        self.width = 3696/self.guiScale
-        self.height = 1992/self.guiScale
+        self.width = 3696 / self.guiScale
+        self.height = 1992 / self.guiScale
         self.window = tk.Tk()
         self.frameDelay = 10
         self.window.title("BVM: 2022 Hackaday Supercon.6 Badge Virtual Machine")
@@ -39,13 +41,13 @@ class BVM:
         self.yellowLeds.sort()
         self.canvas.pack()
         self.ledMap = {
-            'page': [183, 156, 155, 154],
-            'pc': [81,80,79,78, 89, 88, 87, 86, 85, 84, 83, 82],
-            'clk': 148,
-            'nclk': 149, 
-            'opcode0': range(33,49),
-            'opcode1': range(17,33),
-            'opcode2': range(1,17)
+            "page": [183, 156, 155, 154],
+            "pc": [81, 80, 79, 78, 89, 88, 87, 86, 85, 84, 83, 82],
+            "clk": 148,
+            "nclk": 149,
+            "opcode0": range(33, 49),
+            "opcode1": range(17, 33),
+            "opcode2": range(1, 17),
         }
 
     def runtimeTasks(self):
@@ -53,28 +55,25 @@ class BVM:
         # Clock
         clock = self.badge.clock
         if clock == 1:
-            self.redLeds[self.ledMap['clk']].setVal(1)
-            self.redLeds[self.ledMap['nclk']].setVal(0)
+            self.redLeds[self.ledMap["clk"]].setVal(1)
+            self.redLeds[self.ledMap["nclk"]].setVal(0)
         else:
-            self.redLeds[self.ledMap['clk']].setVal(0)
-            self.redLeds[self.ledMap['nclk']].setVal(1)
+            self.redLeds[self.ledMap["clk"]].setVal(0)
+            self.redLeds[self.ledMap["nclk"]].setVal(1)
 
         # Page
         page = self.badge.page
         for i in range(0, 4):
-            self.redLeds[self.ledMap['page'][i]-1].setVal(get_bit(page, i))
+            self.redLeds[self.ledMap["page"][i] - 1].setVal(get_bit(page, i))
         # Stack pointer 182,181,180
         sp = self.badge.cpu.sp
         for i in range(0, 3):
-            self.redLeds[181-i].setVal(get_bit(sp, i))
-
-
-
+            self.redLeds[181 - i].setVal(get_bit(sp, i))
 
         # Program Counter
         pc = self.badge.cpu.getPC()
         for i in range(0, 12):
-            self.yellowLeds[self.ledMap['pc'][i]-1].setVal(get_bit(pc, i))
+            self.yellowLeds[self.ledMap["pc"][i] - 1].setVal(get_bit(pc, i))
 
         # Flags
         self.yellowLeds[74].setVal(self.badge.cpu.V)
@@ -84,25 +83,25 @@ class BVM:
         # Memory matrix
         for i in range(0, 16):
             # PAGE
-            data = self.badge.cpu.ram[i+16*page]
-            for bit in range(0,4):
-                self.redLeds[(i+1)*8-bit-1].setVal(get_bit(data, bit))
+            data = self.badge.cpu.ram[i + 16 * page]
+            for bit in range(0, 4):
+                self.redLeds[(i + 1) * 8 - bit - 1].setVal(get_bit(data, bit))
             # PAGE+1
-            data = self.badge.cpu.ram[(i+16*((page+1)%16))]
-            for bit in range(0,4):
-                self.redLeds[(i+1)*8-bit-5].setVal(get_bit(data, bit))
+            data = self.badge.cpu.ram[(i + 16 * ((page + 1) % 16))]
+            for bit in range(0, 4):
+                self.redLeds[(i + 1) * 8 - bit - 5].setVal(get_bit(data, bit))
 
         # Command Decoder
         # self.badge.opcode0
         opcode0 = self.badge.opcode0
         opcode1 = self.badge.opcode1
         opcode2 = self.badge.opcode2
-        for bit in range(0,16):
-            self.yellowLeds[self.ledMap["opcode0"][bit]-1].setVal(bit == opcode0)
-            self.yellowLeds[self.ledMap["opcode1"][bit]-1].setVal(bit == opcode1)
-            self.yellowLeds[self.ledMap["opcode2"][bit]-1].setVal(bit == opcode2)
+        for bit in range(0, 16):
+            self.yellowLeds[self.ledMap["opcode0"][bit] - 1].setVal(bit == opcode0)
+            self.yellowLeds[self.ledMap["opcode1"][bit] - 1].setVal(bit == opcode1)
+            self.yellowLeds[self.ledMap["opcode2"][bit] - 1].setVal(bit == opcode2)
 
-        #self.badge.step()
+        # self.badge.step()
         try:
             self.badge.update()
         except EOFError:
@@ -110,12 +109,9 @@ class BVM:
         else:
             self.window.after(self.frameDelay, self.runtimeTasks)
 
-
-
     def load(self, file):
         if file is not None:
             self.badge.load(file)
-
 
     def run(self):
         self.window.after(self.frameDelay, self.runtimeTasks)
@@ -123,43 +119,47 @@ class BVM:
 
     def parsePnp(self):
         # pcb width 174.955 mm    2701 px      15.44 px/mm    /2=7.72
-        scale = 20.73/self.guiScale
+        scale = 20.73 / self.guiScale
         x0 = 13
         y0 = 4
-        with open("gui_assets/pnp.csv", newline='') as csvfile:
+        with open("gui_assets/pnp.csv", newline="") as csvfile:
             reader = csv.reader(csvfile)
             header = next(reader)
             for row in reader:
                 if len(row) > 9:
                     elmId = row[0]
-                    x = float(row[2][:-2])*scale+x0
-                    y = self.height-(float(row[3][:-2])*scale+y0)
+                    x = float(row[2][:-2]) * scale + x0
+                    y = self.height - (float(row[3][:-2]) * scale + y0)
                     theta = float(row[9])
                     if elmId[0:2] == "LR":
                         num = int(elmId[3:])
-                        self.redLeds += [LED(num, x, y, theta, "red", self.canvas,self.guiScale)]
-                    elif elmId[0:2] == "LY":  
+                        self.redLeds += [
+                            LED(num, x, y, theta, "red", self.canvas, self.guiScale)
+                        ]
+                    elif elmId[0:2] == "LY":
                         num = int(elmId[3:])
-                        self.yellowLeds += [LED(num, x, y, theta, "yellow", self.canvas, self.guiScale)]
+                        self.yellowLeds += [
+                            LED(num, x, y, theta, "yellow", self.canvas, self.guiScale)
+                        ]
                     elif elmId[0:2] == "SW":
                         self.buttons += [Button(x, y, self.canvas, self.guiScale)]
 
 
 class LED:
     def __init__(self, num, x, y, theta, color, canvas, scale):
-        assert(color in ["red", "yellow"])
+        assert color in ["red", "yellow"]
         self.x = x
         self.y = y
         self.scale = scale
         self.num = num
-        self.theta = int(theta%360)
-        #self.theta = -math.radians(theta)
+        self.theta = int(theta % 360)
+        # self.theta = -math.radians(theta)
         self.color = color
         prefix = self.color[0:3] + str(self.theta)
         if self.theta == 45:
-            self.px = 60/self.scale
+            self.px = 60 / self.scale
         else:
-            self.px = 50/self.scale
+            self.px = 50 / self.scale
         offImageObj = Image.open("gui_assets/leds/" + prefix + "off.jpg")
         offImageObj.thumbnail((self.px, self.px), Image.LANCZOS)
         onImageObj = Image.open("gui_assets/leds/" + prefix + "on.jpg")
@@ -177,7 +177,9 @@ class LED:
         return str(self.num)
 
     def draw(self):
-        self.image = self.canvas.create_image(self.x, self.y, anchor=tk.CENTER, image=self.offImage)
+        self.image = self.canvas.create_image(
+            self.x, self.y, anchor=tk.CENTER, image=self.offImage
+        )
 
     def setVal(self, val):
         self.val = val
@@ -294,6 +296,7 @@ class LED:
 # 88: PC 5
 # 89: PC 4
 ###################################################
+
 
 class Button:
     def __init__(self, x, y, canvas, scale):

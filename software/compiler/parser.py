@@ -3,6 +3,7 @@
 import errors
 import tokens
 
+
 def parse(filename):
     """Parse source file text"""
 
@@ -31,11 +32,15 @@ def parse(filename):
                 line_parsed = True
             # Create a variable
             if " <= " in line_stripped:
-                parsed_tokens.append(tokens.MemAccess(filename, line_num, line_stripped))
+                parsed_tokens.append(
+                    tokens.MemAccess(filename, line_num, line_stripped)
+                )
                 line_parsed = True
             elif " = " in line_stripped:
                 expression = line_stripped.lstrip("var ").strip()
-                parsed_tokens.append(tokens.VariableAssign(filename, line_num, expression))
+                parsed_tokens.append(
+                    tokens.VariableAssign(filename, line_num, expression)
+                )
                 line_parsed = True
             elif line_stripped.startswith("if"):
                 expression = line_stripped.lstrip("if").strip()
@@ -59,6 +64,8 @@ def parse(filename):
                 line_parsed = True
 
             if not line_parsed:
-                raise errors.BadgeSyntaxError(f"Unknown syntax: {filename}:{line_num}: `{line_stripped}`")
+                raise errors.BadgeSyntaxError(
+                    f"Unknown syntax: {filename}:{line_num}: `{line_stripped}`"
+                )
 
     return parsed_tokens

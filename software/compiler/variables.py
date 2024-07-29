@@ -4,6 +4,7 @@ import enum
 
 import errors
 
+
 class Variable:
     def __init__(self, name: str) -> None:
         self.name: str = name
@@ -22,6 +23,7 @@ class Variable:
 
 class Literal:
     """A literal value"""
+
     MAXINT = 0
 
     def __init__(self, value: str) -> None:
@@ -41,6 +43,7 @@ class Literal:
 
 class Nibble(Literal):
     """An unigned 4-bit integer"""
+
     MAXINT = 15
 
     @classmethod
@@ -60,11 +63,13 @@ class Nibble(Literal):
 
 class Byte(Literal):
     """A Signed 8-bit integer"""
+
     MAXINT = 127
-            
+
 
 class Register(enum.Enum):
     """Enum of possible registers to use"""
+
     R0 = 0
     R1 = 1
     R2 = 2
@@ -79,8 +84,10 @@ class Register(enum.Enum):
     def __repr__(self) -> str:
         return f"Reg:{self.name}"
 
+
 class RegisterPool:
     """Set of available registers"""
+
     # Skip R0 because it's special and needed for some opcodes
     pool = [
         Register.R1,
@@ -104,7 +111,7 @@ class RegisterPool:
     @staticmethod
     def free(reg: Register) -> None:
         if reg in RegisterPool.pool:
-            raise 
+            raise
         RegisterPool.pool.append(reg)
 
 

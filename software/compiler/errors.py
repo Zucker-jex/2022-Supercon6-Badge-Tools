@@ -1,5 +1,6 @@
 """Possible errors reported by the compiler"""
 
+
 class BadgeSyntaxError(ValueError):
     """Invalid Syntax"""
 

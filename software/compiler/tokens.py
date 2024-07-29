@@ -6,6 +6,7 @@ from typing import Optional
 import errors
 import variables
 
+
 class Token:
     """Token parsed from source"""
 
@@ -16,7 +17,7 @@ class Token:
         self.instructions: list = []
 
     def __repr__(self) -> str:
-        return f"{self.file_source}:{self.line_source}: \"{self.source_value}\""
+        return f'{self.file_source}:{self.line_source}: "{self.source_value}"'
 
     def process(self, scope: variables.Scope) -> None:
         """Compute what a tokenshould do in the current scope (which it can modify)
@@ -61,7 +62,7 @@ class VariableAssign(Token):
     """Assign a value to a variable"""
 
     def process(self, scope: variables.Scope) -> None:
-        # Split line into <dest_variable> <=> <expression> 
+        # Split line into <dest_variable> <=> <expression>
         line_tokens = self.source_value.split(" ", 2)
         var_name = line_tokens[0].strip()
         if var_name in scope:
@@ -79,18 +80,24 @@ class VariableAssign(Token):
             # Try to make a literal
             try:
                 src = variables.Nibble(src_raw).value
-                self.instructions.append(f"mov {dest}, {src} ; {var_name} = {src_raw}\n")
+                self.instructions.append(
+                    f"mov {dest}, {src} ; {var_name} = {src_raw}\n"
+                )
             except ValueError:
                 # Not a literal, process the more complicated expression
                 temp_var, instrs = process_expression(src_raw.split(" "), scope)
                 self.instructions.extend(instrs)
-                self.instructions.append(f"mov {dest}, {temp_var.get_register()} ; {variable.name} = {temp_var.name}\n")
+                self.instructions.append(
+                    f"mov {dest}, {temp_var.get_register()} ; {variable.name} = {temp_var.name}\n"
+                )
                 temp_var.drop()
                 if temp_var.name in scope:
                     del scope[temp_var.name]
 
 
-def process_expression(src_tokens: list, scope: variables.Scope) -> tuple[variables.Variable, list]:
+def process_expression(
+    src_tokens: list, scope: variables.Scope
+) -> tuple[variables.Variable, list]:
     """Process an expression of multiple math operations"""
     instructions = []
 
@@ -98,7 +105,7 @@ def process_expression(src_tokens: list, scope: variables.Scope) -> tuple[variab
     left_val = src_tokens[0]
     operator = src_tokens[1]
     right_val = src_tokens[2]
-    
+
     with scope:
         left_var, extra_instrs = temp_variable_from_value(left_val, scope)
         instructions.extend(extra_instrs)
@@ -106,15 +113,25 @@ def process_expression(src_tokens: list, scope: variables.Scope) -> tuple[variab
         instructions.extend(extra_instrs)
 
         if operator == "+":
-            instructions.append(f"add {left_var.get_register()}, {right_var.get_register()} ; {left_var.name} += {right_var.name}")
+            instructions.append(
+                f"add {left_var.get_register()}, {right_var.get_register()} ; {left_var.name} += {right_var.name}"
+            )
         elif operator == "-":
-            instructions.append(f"sub {left_var.get_register()}, {right_var.get_register()} ; {left_var.name} -= {right_var.name}")
+            instructions.append(
+                f"sub {left_var.get_register()}, {right_var.get_register()} ; {left_var.name} -= {right_var.name}"
+            )
         elif operator == "|":
-            instructions.append(f"or {left_var.get_register()}, {right_var.get_register()} ; {left_var.name} |= {right_var.name}")
+            instructions.append(
+                f"or {left_var.get_register()}, {right_var.get_register()} ; {left_var.name} |= {right_var.name}"
+            )
         elif operator == "&":
-            instructions.append(f"and {left_var.get_register()}, {right_var.get_register()} ; {left_var.name} &= {right_var.name}")
+            instructions.append(
+                f"and {left_var.get_register()}, {right_var.get_register()} ; {left_var.name} &= {right_var.name}"
+            )
         elif operator == "^":
-            instructions.append(f"xor {left_var.get_register()}, {right_var.get_register()} ; {left_var.name} ^= {right_var.name}")
+            instructions.append(
+                f"xor {left_var.get_register()}, {right_var.get_register()} ; {left_var.name} ^= {right_var.name}"
+            )
         right_var.drop()  # Done with this temporary variable
 
         if len(src_tokens) > 3:
@@ -126,18 +143,21 @@ def process_expression(src_tokens: list, scope: variables.Scope) -> tuple[variab
             # del scope[old_left_var.name]
             # old_left_var.drop()
 
-
     return left_var, instructions
 
 
-def temp_variable_from_value(src: str, scope: variables.Scope) -> tuple[variables.Variable, list]:
+def temp_variable_from_value(
+    src: str, scope: variables.Scope
+) -> tuple[variables.Variable, list]:
     """Get a variable with a value (variable or literal) stored in it
     and the instruction to get the value into that register if necessary"""
     if src in scope:
         # Existing variable
         src_var = scope[src]
         temp_var = variables.Variable(f"{src}_copy")
-        inst = [f"mov {temp_var.get_register()}, {src_var.get_register()} ; {temp_var.name} = {src_var.name}"]
+        inst = [
+            f"mov {temp_var.get_register()}, {src_var.get_register()} ; {temp_var.name} = {src_var.name}"
+        ]
         return temp_var, inst
     try:
         # int literal value
@@ -148,6 +168,7 @@ def temp_variable_from_value(src: str, scope: variables.Scope) -> tuple[variable
         return dest_var, inst
     except:
         raise
+
 
 class If(Token):
     """Start of an if block"""
@@ -161,29 +182,45 @@ class If(Token):
         right = word_tokens[2].strip()
 
         # Compare the left and right values
-        if variables.Nibble.can_be_nibble(left) and variables.Nibble.can_be_nibble(right):
+        if variables.Nibble.can_be_nibble(left) and variables.Nibble.can_be_nibble(
+            right
+        ):
             # Comparing two int literals, move one to a variable before comparing
             self.instructions.append(f"mov r0, {left} ; R0 = {left} for compare")
             self.instructions.append(f"cp r0, {right} ; Compare {left} and {right}")
-        elif variables.Nibble.can_be_nibble(left) and not variables.Nibble.can_be_nibble(right):
+        elif variables.Nibble.can_be_nibble(
+            left
+        ) and not variables.Nibble.can_be_nibble(right):
             # Comparing int literal and variable, move var to r0 then compare
             right_var = scope[right]
-            self.instructions.append(f"mov r0, {right_var.get_register()} ; R0 = {right} for compare")
+            self.instructions.append(
+                f"mov r0, {right_var.get_register()} ; R0 = {right} for compare"
+            )
             self.instructions.append(f"cp r0, {left} ; Compare {left} and {right}")
-        elif (not variables.Nibble.can_be_nibble(left)) and variables.Nibble.can_be_nibble(right):
+        elif (
+            not variables.Nibble.can_be_nibble(left)
+        ) and variables.Nibble.can_be_nibble(right):
             # Comparing variable and int literal, move variable to r0 then compare
             left_var = scope[left]
-            self.instructions.append(f"mov r0, {left_var.get_register()} ; R0 = {left} for compare")
+            self.instructions.append(
+                f"mov r0, {left_var.get_register()} ; R0 = {left} for compare"
+            )
             self.instructions.append(f"cp r0, {right} ; Compare {left} and {right}")
         elif left in scope and right in scope:
             # Comparing two variables, subtract then put result in r0, compare to 0
             left_var = scope[left]
             right_var = scope[right]
-            self.instructions.append(f"mov r0, {left_var.get_register()} ; Move {left} to R0")
-            self.instructions.append(f"sub r0, {right_var.get_register()} ; Subtract {left} and {right}, compare")
+            self.instructions.append(
+                f"mov r0, {left_var.get_register()} ; Move {left} to R0"
+            )
+            self.instructions.append(
+                f"sub r0, {right_var.get_register()} ; Subtract {left} and {right}, compare"
+            )
             # self.instructions.append(f"cp r0, 0 ; compare difference with 0 to see if {left} and {right} are the same")
         else:
-            raise KeyError(f"Unable to recognize `{left}` and `{right}` as variables from {self.file_source}:{self.line_source}")
+            raise KeyError(
+                f"Unable to recognize `{left}` and `{right}` as variables from {self.file_source}:{self.line_source}"
+            )
 
         # Make comparison ==, !=
         if comparator == "==":
@@ -237,7 +274,7 @@ class While(If):
 
 class EndWhile(Token):
     """End of a while loop definition"""
-    
+
     def __init__(self, file_source, line_source) -> None:
         super().__init__(file_source, line_source, "")
 
@@ -274,7 +311,9 @@ class MemAccess(Token):
                 src = scope[src_name].get_register()
             elif variables.Nibble.can_be_nibble(src_name):
                 src = "r0"
-                self.instructions.append(f"mov r0, {src_name} ; Copy int literal to r0 for copy to memory\n")
+                self.instructions.append(
+                    f"mov r0, {src_name} ; Copy int literal to r0 for copy to memory\n"
+                )
             read = False
         with scope:
             # Convert page/slot to valid strings
@@ -292,17 +331,25 @@ class MemAccess(Token):
             if variables.Nibble.can_be_nibble(page_raw) and slot_raw in scope:
                 print("page is a literal")
                 temp_var = variables.Variable("temp_page")
-                self.instructions.append(f"mov {temp_var.get_register()}, {page_raw} ; Copy literal to temp variable\n")
+                self.instructions.append(
+                    f"mov {temp_var.get_register()}, {page_raw} ; Copy literal to temp variable\n"
+                )
                 scope[temp_var.name] = temp_var
                 page = temp_var.get_register()
 
         # Perform read/write
         print(f"Memory: read: {read} page: {page} slot: {slot}")
         if read:
-            self.instructions.append(f"mov r0, [{page}:{slot}] ; read value from memory [{page_raw}, {slot_raw}]\n")
-            self.instructions.append(f"mov {dest_var.get_register()}, r0 ; copy value from r0 to {dest_var.name}\n")
+            self.instructions.append(
+                f"mov r0, [{page}:{slot}] ; read value from memory [{page_raw}, {slot_raw}]\n"
+            )
+            self.instructions.append(
+                f"mov {dest_var.get_register()}, r0 ; copy value from r0 to {dest_var.name}\n"
+            )
         else:  # write
-            self.instructions.append(f"mov [{page}:{slot}], r0; write {src} to memory [{page_raw}, {slot_raw}]\n")
+            self.instructions.append(
+                f"mov [{page}:{slot}], r0; write {src} to memory [{page_raw}, {slot_raw}]\n"
+            )
 
 
 class FunctionDefine(Token):
@@ -310,7 +357,7 @@ class FunctionDefine(Token):
 
     def __init__(self, file_source, line_source, value) -> None:
         super().__init__(file_source, line_source, value)
-        
+
         fun_tokens = value.split(" ")
 
         self.name: str = fun_tokens[1]
@@ -344,8 +391,8 @@ class FunctionCall(Token):
         super().__init__(file_source, line_source, value)
 
         fun_tokens = value.split(" ")
-        
-        self.name:str = fun_tokens[0]
+
+        self.name: str = fun_tokens[0]
         self.arg_names: list[str] = fun_tokens[1:]
 
     def process(self, scope: variables.Scope) -> None:
