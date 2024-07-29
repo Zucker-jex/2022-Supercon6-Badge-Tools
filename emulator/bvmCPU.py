@@ -31,8 +31,7 @@ def signed(n, b):
         n = n - (1 << b)  # compute negative value
     return n
 
-
-class CPU:
+    # class CPU:
     def __init__(self):
         self.ram = [0] * 256
         self.sp = 0
@@ -422,4 +421,320 @@ class CPU:
             # print(f"pre-skip: {hex(pc)}")
             pc += (m - 1) % 4 + 1
             # print(f"post-skip: {hex(pc)}")
+            self.setPC(pc)
+
+
+class CPU:
+    def __init__(self):
+        self.ram = [0] * 256
+        self.sp = 0
+        self.pc = 0
+
+        # Flags
+        self.V = 0
+        self.Z = 0
+        self.C = 0
+
+    def getPC(self):
+        return self.pc
+
+    def setPC(self, pc):
+        self.pc = pc % 4096
+
+    def step(self):
+        pc = self.getPC() + 1
+        self.setPC(pc)
+
+    def handleJumps(self, dest):
+        if dest == 0x0C:
+            pc = self.pc % 4096
+            self.sp = self.sp + 1
+            if self.sp > 5:
+                raise RuntimeError(
+                    "Crash!  Stack overflow.  You can only nest five subroutines deep on this machine.  Or something has gotten loose.  Anyway, we're not going to let you just write all over page RAM so easily."
+                )
+            print(f"JSR called: stack pointer depth: {self.sp}, PC: {hex(self.pc)}")
+            self.ram[0x10 + self.sp * 3 - 3] = get_bits(pc, range(0, 4))
+            self.ram[0x10 + self.sp * 3 - 2] = get_bits(pc, range(4, 8))
+            self.ram[0x10 + self.sp * 3 - 1] = get_bits(pc, range(8, 12))
+            jsr = self.ram[0x0C]
+            pcm = self.ram[0x0E] << 4
+            pch = self.ram[0x0F] << 8
+            self.pc = pch + pcm + jsr
+            print(f"GOSUB jump to {hex(self.pc)}")
+            print(
+                f"RAM before GOSUB:\n {[hex(x) for x in self.ram[:8]]}\n {[hex(x) for x in self.ram[8:16]]}"
+            )
+        elif dest == 0x0D:
+            pcl = self.ram[0x0D]
+            pcm = self.ram[0x0E] << 4
+            pch = self.ram[0x0F] << 8
+            self.pc = pch | pcm | pcl
+            print(f"GOTO jump to {hex(self.pc)}")
+
+    def ADD(self, args):
+        if args["mode"] == 0:
+            x = args["x"]
+            y = args["y"]
+            a = self.ram[x]
+            b = self.ram[y]
+            res = a + b
+            self.ram[x] = res % 16
+            self.C = 1 if res > 15 else 0
+            self.Z = 1 if res == 0 else 0
+            self.V = (
+                1
+                if (signed(a, 4) + signed(b, 4) > 7)
+                or (signed(a, 4) + signed(b, 4) < -8)
+                else 0
+            )
+
+        elif args["mode"] == 1:
+            a = self.ram[0]
+            b = args["n"]
+            res = a + b
+            self.ram[0] = res % 16
+            self.C = 1 if res > 15 else 0
+            self.Z = 1 if res == 0 else 0
+            self.V = (
+                1
+                if (signed(a, 4) + signed(b, 4) > 7)
+                or (signed(a, 4) + signed(b, 4) < -8)
+                else 0
+            )
+
+    def ADC(self, args):
+        x = args["x"]
+        y = args["y"]
+        a = self.ram[x]
+        b = self.ram[y]
+        res = a + b + self.C
+        self.ram[x] = res % 16
+        self.C = 1 if res > 15 else 0
+        self.Z = 1 if res == 0 else 0
+        self.V = (
+            1
+            if (signed(a, 4) + signed(b, 4) + self.C > 7)
+            or (signed(a, 4) + signed(b, 4) + self.C < -8)
+            else 0
+        )
+
+    def SUB(self, args):
+        x = args["x"]
+        y = args["y"]
+        a = self.ram[x]
+        b = self.ram[y]
+        res = a - b
+        self.ram[x] = res % 16
+        self.C = 1 if res < 0 else 0
+        self.Z = 1 if res == 0 else 0
+        self.V = (
+            1
+            if (signed(a, 4) - signed(b, 4) > 7) or (signed(a, 4) - signed(b, 4) < -8)
+            else 0
+        )
+
+    def SBB(self, args):
+        x = args["x"]
+        y = args["y"]
+        a = self.ram[x]
+        b = self.ram[y]
+        res = a - b - int(self.C == 0)
+        self.ram[x] = res % 16
+        self.C = 1 if res < 0 else 0
+        self.Z = 1 if res == 0 else 0
+        self.V = (
+            1
+            if (signed(a, 4) - signed(b, 4) - int(self.C == 0) > 7)
+            or (signed(a, 4) - signed(b, 4) - int(self.C == 0) < -8)
+            else 0
+        )
+
+    def OR(self, args):
+        if args["mode"] == 0:
+            x = args["x"]
+            y = args["y"]
+            self.ram[x] = self.ram[x] | self.ram[y]
+            self.Z = 1 if self.ram[x] == 0 else 0
+        elif args["mode"] == 1:
+            n = args["n"]
+            self.ram[0] = self.ram[0] | n
+            self.Z = 1 if self.ram[0] == 0 else 0
+            self.C = 1
+
+    def AND(self, args):
+        if args["mode"] == 0:
+            x = args["x"]
+            y = args["y"]
+            self.ram[x] = self.ram[x] & self.ram[y]
+            self.Z = 1 if self.ram[x] == 0 else 0
+        elif args["mode"] == 1:
+            n = args["n"]
+            self.ram[0] = self.ram[0] & n
+            self.Z = 1 if self.ram[0] == 0 else 0
+            self.C = 0
+
+    def XOR(self, args):
+        if args["mode"] == 0:
+            x = args["x"]
+            y = args["y"]
+            self.ram[x] = self.ram[x] ^ self.ram[y]
+            self.Z = 1 if self.ram[x] == 0 else 0
+        elif args["mode"] == 1:
+            n = args["n"]
+            self.ram[0] = self.ram[0] ^ n
+            self.Z = 1 if self.ram[0] == 0 else 0
+
+    def MOV(self, args):
+        if args["mode"] == 0:  # RX,RY
+            x = args["x"]
+            y = args["y"]
+            self.ram[x] = self.ram[y]
+            self.handleJumps(x)
+        elif args["mode"] == 1:  # RX,N
+            x = args["x"]
+            n = args["n"]
+            self.ram[x] = n
+            self.handleJumps(x)
+        elif args["mode"] == 2:  # XY,R0
+            rx = self.ram[args["x"]]
+            ry = self.ram[args["y"]]
+            addr = rx << 4 | ry
+            self.ram[addr] = self.ram[0]
+        elif args["mode"] == 3:  # R0,XY
+            rx = self.ram[args["x"]]
+            ry = self.ram[args["y"]]
+            addr = rx << 4 | ry
+            self.ram[0] = self.ram[addr]
+        elif args["mode"] == 4:  # NN,R0
+            self.ram[args["nn"]] = self.ram[0]
+        elif args["mode"] == 5:  # R0,NN
+            self.ram[0] = self.ram[args["nn"]]
+        elif args["mode"] == 6:  # PC,NN
+            self.ram[15] = (args["nn"] & 0xF0) >> 4
+            self.ram[14] = args["nn"] & 0x0F
+
+    def JR(self, args):
+        pc = self.getPC()
+        pc += signed(args["nn"], 8)
+        self.setPC(pc)
+
+    def CP(self, args):
+        r0 = self.ram[0]
+        n = args["n"]
+        if r0 >= n:
+            self.C = 1
+        else:
+            self.C = 0
+        if r0 == n:
+            self.Z = 1
+        else:
+            self.Z = 0
+
+    def INC(self, args):
+        y = args["y"]
+        self.ram[y] = (self.ram[y] + 1) % 16
+        self.handleJumps(y)
+        if self.ram[y] == 0:
+            self.Z = 1
+            self.C = 1
+        else:
+            self.Z = 0
+            self.C = 0
+
+    def DEC(self, args):
+        y = args["y"]
+        self.ram[y] = (self.ram[y] - 1) % 16
+        self.handleJumps(y)
+        if self.ram[y] == 0:
+            self.Z = 1
+        else:
+            self.Z = 0
+        if self.ram[y] == 15:
+            self.C = 0
+        else:
+            self.C = 1
+
+    def DSZ(self, args):
+        y = args["y"]
+        self.ram[y] = (self.ram[y] - 1) % 16
+        if self.ram[y] == 0:
+            self.step()
+
+    def EXR(self, args):
+        n = args["n"]
+        for i in range(0, (n - 1) % 16 + 1):
+            p14_addr = 0xE << 4 | i
+            r = self.ram[i]
+            p = self.ram[p14_addr]
+            self.ram[i] = p
+            self.ram[p14_addr] = r
+
+    def BIT(self, args):
+        r = self.ram[args["g"]]  # doesn't handle RIN, but emu anyway
+        b = args["m"]
+        if get_bit(r, b):  # test if bit is 0
+            self.Z = 0
+        else:
+            self.Z = 1
+
+    def BSET(self, args):
+        r = self.ram[args["g"]]
+        self.ram[args["g"]] = r | (1 << args["m"])
+
+    def BCLR(self, args):
+        r = self.ram[args["g"]]
+        self.ram[args["g"]] = r & ~(1 << args["m"])
+
+    def BTG(self, args):
+        r = self.ram[args["g"]]
+        self.ram[args["g"]] = r ^ (1 << args["m"])
+
+    def RRC(self, args):
+        y = self.ram[args["y"]]
+        y = y + (self.C << 4)  # add in carry
+        if y & 1:  # last bit is set
+            self.C = 1
+        else:
+            self.C = 0
+        self.ram[args["y"]] = y >> 1
+
+    def RET(self, args):
+        print(f"RET called: stack pointer depth: {self.sp}, PC: {hex(self.pc)}")
+        self.ram[0] = args["n"]
+        pcl = self.ram[0x10 + self.sp * 3 - 3]
+        pcm = self.ram[0x10 + self.sp * 3 - 2] << 4
+        pch = self.ram[0x10 + self.sp * 3 - 1] << 8
+        self.pc = pch | pcm | pcl
+        self.sp = self.sp - 1
+        if self.sp < 0:
+            raise RuntimeError(
+                "Crash!  Stack underrun.  You've called one more RET than JSRs.  Check your control flow."
+            )
+        print(
+            f"Returning from subroutine: stack pointer {self.sp}, new PC: {hex(self.pc)}"
+        )
+        print(
+            f"RAM on RET:\n {[hex(x) for x in self.ram[:8]]}\n {[hex(x) for x in self.ram[8:16]]}"
+        )
+
+    def SKIP(self, args):
+        f = args["f"]  # condition
+        m = args["m"]  # number of instructions
+        skip = False
+        if f == 0b00:  # C
+            if self.C:
+                skip = True
+        elif f == 0b01:  # NC
+            if not self.C:
+                skip = True
+        elif f == 0b10:  # Z
+            if self.Z:
+                skip = True
+        elif f == 0b11:  # NZ
+            if not self.Z:
+                skip = True
+        if skip:
+            pc = self.getPC()
+            pc += (m - 1) % 4 + 1
             self.setPC(pc)
