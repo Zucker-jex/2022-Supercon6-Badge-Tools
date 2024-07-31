@@ -36,6 +36,7 @@ line of the `.asm` file.
 ## Variable assignment and math
 
 Examples:
+
 ```
 foo = 3
 bar = 2 + foo
@@ -60,17 +61,18 @@ Available comparisons: `==`, `!=`
 Comparisons can not be chained. For example, you cannot evaluate `foo == bar == baz` in one line.
 Conditionals can only be used in branch evaluations.
 
-
 ## Branches
+
 Available branches and loops: `if`, `while`
 
 Each block must end with the matching closing statement: `endif`, `endwhile`
 
 Indentation does not matter inside an `if` or `while` block, but can be used for readability.
-Variables only defined inside an `if`/`while` block will not exist after exiting that block 
+Variables only defined inside an `if`/`while` block will not exist after exiting that block
 (they have fallen out of scope).
 
 Example:
+
 ```
 foo = 1
 bar = 1
