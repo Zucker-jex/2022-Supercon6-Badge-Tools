@@ -3,7 +3,7 @@ import serial
 import sys
 
 # Set this to your serial adapter
-PORT = "COM0"
+PORT = "COM18"
 
 
 def load(fname):

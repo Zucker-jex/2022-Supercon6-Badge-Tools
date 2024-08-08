@@ -13,7 +13,7 @@ if len(sys.argv) > 1:
     NAME = sys.argv[1]
 
 # Specify serial adapter COM port (check device manager for this)
-PORT = "COM0"
+PORT = "COM18"
 
 print("Ready for download...")
 print("Please press SAVE on your badge.")
