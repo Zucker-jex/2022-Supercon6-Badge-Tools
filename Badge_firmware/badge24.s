@@ -18,7 +18,7 @@
 .equ	autorpt_next, 15	; ×10 ms (200/2 Hz)
 
 .equ	Ver, 1
-.equ	Rev, 2
+.equ	Rev, 3
 .equ	Year, 24
 .equ	Month, 8
 .equ	Day, 13
@@ -364,94 +364,7 @@ selfcheck_back:
 	lsr	w2,w2		; /2
 	mov	#CHS2,w4	; point w4 to CHS2
 	call	get_chs
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Transfer program HAMLET
-	clr	TBLPAG
-	mov	#tbloffset(display),w0
-; code @ 0x000
-	mov	#Rom,w2
-0:
-	tblrdl	[w0++],w1
-	btsc	w1,#15
-	bra	1f
-	mov	w1,[w2++]
-	bra	0b
-1:
-; char gen @ 0x100
-	mov	#tbloffset(chargen),w0
-	mov	#Rom+2*0x100,w2
-2:
-	tblrdl	[w0++],w1
-	btsc	w1,#15
-	bra	1f
-	mov	w1,[w2++]
-	bra	2b
-1:
-; text @ 0x500
-	mov	#tbloffset(disptext),w0
-	mov	#Rom+2*0x500,w2		; adr 0x500
-	mov	#0xE0,w4		; RET code
-2:
-	tblrdl.b [w0++],w1
-	tblrdl.b [w0],w5
-	and.b	w5,w1,w5
-	inc.b	w5,w5
-	bra	z,1f
-
-	and	w1,#0x0F,w3
-	ior	w3,w4,w3
-	mov	w3,[w2++]
-	lsr	w1,#4,w3
-	and	w3,#0x0F,w3
-	ior	w3,w4,w3
-	mov	w3,[w2++]
-	bra	2b
-1:
-	mov	#0x00EF,w5		; RET F
-	mov	w5,[w2++]		; text terminator
-	mov	w5,[w2++]		; text terminator
-; save it to flash 14
-	call	com_rom
-	mov	#14,w0
-	bclr	Flag2,#6	; #6 EE subroutines adjust to Boot
-	bclr	Flag2,#7	; #7 EE load to second halve of Rom area (starting at 0x3000)
-	call	eesavew0	; EEsave on record 14
-	call	com_rom
-	mov	#Rom,w0
-	repeat	#0x01000-1
-	clr	[w0++]		; clr Rom
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; Transfer program UART DISP
-	mov	#tbloffset(serial_disp),w0
-; code @ 0x000
-	mov	#Rom,w2
-0:
-	tblrdl	[w0++],w1
-	btsc	w1,#15
-	bra	1f
-	mov	w1,[w2++]
-	bra	0b
-1:
-; char gen @ 0x100
-	mov	#tbloffset(chargen),w0
-	mov	#Rom+2*0x100,w2
-2:
-	tblrdl	[w0++],w1
-	btsc	w1,#15
-	bra	1f
-	mov	w1,[w2++]
-	bra	2b
-1:
-; save it to flash 13
-	call	com_rom
-	mov	#13,w0
-	bclr	Flag2,#6	; #6 EE subroutines adjust to Boot
-	bclr	Flag2,#7	; #7 EE load to second halve of Rom area (starting at 0x3000)
-	call	eesavew0	; EEsave on seg 13
-	call	com_rom
-	mov	#Rom,w0
-	repeat	#0x01000-1
-	clr	[w0++]		; clr Rom
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 	bset	Flag2,#4	; #4 set when initialized
 	call	peek_flash	; record flash occupance  (37 ms)
 ; -----------------------------
@@ -542,7 +455,5 @@ w0ms:
 	.include	"int.inc"
 	.include	"history.inc"
 	.include	"table2.inc"
-	.include	"asem.inc"
-	.include	"hello.inc"
 
 	.end

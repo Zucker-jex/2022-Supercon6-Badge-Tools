@@ -3,8 +3,20 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Work/2022-Supercon6-Badge-Tools/Badge_firmware/badge24.s</file>
+            <file>file:/D:/Work/2022-Supercon6-Badge-Tools/Badge_firmware/list.lst</file>
+            <file>file:/D:/Work/2022-Supercon6-Badge-Tools/Badge_firmware/Boot.inc</file>
+            <file>file:/D:/Work/2022-Supercon6-Badge-Tools/Badge_firmware/Makefile</file>
+            <file>file:/D:/Work/2022-Supercon6-Badge-Tools/Badge_firmware/hello.inc</file>
+            <file>file:/D:/Work/2022-Supercon6-Badge-Tools/Badge_firmware/Flash.inc</file>
+            <file>file:/D:/Work/2022-Supercon6-Badge-Tools/Badge_firmware/pgm.inc</file>
             <file>file:/D:/Work/2022-Supercon6-Badge-Tools/Badge_firmware/Asem.inc</file>
+            <file>file:/D:/Work/2022-Supercon6-Badge-Tools/Badge_firmware/Table2.inc</file>
+            <file>file:/D:/Work/2022-Supercon6-Badge-Tools/Badge_firmware/history.inc</file>
+            <file>file:/D:/Work/2022-Supercon6-Badge-Tools/Badge_firmware/int.inc</file>
+            <file>file:/D:/Work/2022-Supercon6-Badge-Tools/Badge_firmware/I2C.inc</file>
+            <file>file:/D:/Work/2022-Supercon6-Badge-Tools/Badge_firmware/alu.inc</file>
+            <file>file:/D:/Work/2022-Supercon6-Badge-Tools/Badge_firmware/badge24.s</file>
+            <file>file:/D:/Work/2022-Supercon6-Badge-Tools/Badge_firmware/ss.inc</file>
         </group>
     </open-files>
 </project-private>

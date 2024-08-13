@@ -66,10 +66,10 @@ Default Scalar Model: Small
 section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
 .text                        0x100                0xbe           0x11d  (285)
-.text                        0x1be              0x40c8          0x612c  (24876)
-.dinit                      0x4286                 0x8             0xc  (12)
+.text                        0x1be              0x372c          0x52c2  (21186)
+.dinit                      0x38ea                 0x8             0xc  (12)
 
-                 Total "program" memory used (bytes):         0x6255  (25173) 9%
+                 Total "program" memory used (bytes):         0x53eb  (21483) 8%
 
 
 "data" Memory  [Origin = 0x800, Length = 0x4000]
@@ -236,9 +236,9 @@ __FDEVOPT1        0x02af2c          0x2
  *(.debug_abbrev)
  .debug_abbrev    0x000000         0x14 build/default/production/badge24.o
 
-.debug_line       0x000000       0x1221
+.debug_line       0x000000       0x11df
  *(.debug_line)
- .debug_line      0x000000       0x1221 build/default/production/badge24.o
+ .debug_line      0x000000       0x11df build/default/production/badge24.o
 
 .debug_frame
  *(.debug_frame)
@@ -1732,8 +1732,8 @@ __c30_signature
  .ivt._U2ErrInterrupt
                   0x000098          0x2 build/default/production/badge24.o
 
-.text             0x0001be       0x40c8
- .text            0x0001be       0x40c8 build/default/production/badge24.o
+.text             0x0001be       0x372c
+ .text            0x0001be       0x372c build/default/production/badge24.o
                   0x000204                  __reset
                   0x00100e                  __T1Interrupt
                   0x001012                  __T3Interrupt
@@ -1744,5 +1744,5 @@ __c30_signature
                   0x001026                  __U2RXInterrupt
                   0x00102a                  __U2ErrInterrupt
 
-.dinit            0x004286          0x8
- .dinit           0x004286          0x8 data_init
+.dinit            0x0038ea          0x8
+ .dinit           0x0038ea          0x8 data_init
