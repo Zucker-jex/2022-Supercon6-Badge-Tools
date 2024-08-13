@@ -18,7 +18,7 @@
 .equ	autorpt_next, 15	; ×10 ms (200/2 Hz)
 
 .equ	Ver, 1
-.equ	Rev, 1
+.equ	Rev, 2
 .equ	Year, 24
 .equ	Month, 8
 .equ	Day, 13

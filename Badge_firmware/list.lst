@@ -3529,7 +3529,7 @@ boot_burn1k:		; burn 1K instructions, 3K bytes + 1K dummy 0's
 
 00001004 <ver_data>:
     1004:	01 00 00    	nop       
-    1006:	01 00 00    	nop       
+    1006:	02 00 00    	nop       
     1008:	18 00 00    	nop       
     100a:	08 00 00    	nop       
     100c:	0d 00 00    	nop       

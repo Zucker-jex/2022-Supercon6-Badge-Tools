@@ -51,17 +51,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=badge22.s
+SOURCEFILES_QUOTED_IF_SPACED=badge24.s
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/badge22.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/badge22.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/badge24.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/badge24.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/badge22.o
+OBJECTFILES=${OBJECTDIR}/badge24.o
 
 # Source Files
-SOURCEFILES=badge22.s
+SOURCEFILES=badge24.s
 
 
 
@@ -115,18 +115,18 @@ endif
 # ------------------------------------------------------------------------------------
 # Rules for buildStep: assemble
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
-${OBJECTDIR}/badge22.o: badge22.s  .generated_files/flags/default/2942b2f61d3b1527330c18fc53fd1d27aeb3710b .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/badge24.o: badge24.s  .generated_files/flags/default/10c8122c1a6999fba6b14942ec8bd4ce26c18bc1 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/badge22.o.d 
-	@${RM} ${OBJECTDIR}/badge22.o 
-	${MP_CC} $(MP_EXTRA_AS_PRE)  badge22.s  -o ${OBJECTDIR}/badge22.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -D__DEBUG   -omf=elf -DXPRJ_default=$(CND_CONF)    -Wa,-MD,"${OBJECTDIR}/badge22.o.d",--defsym=__MPLAB_BUILD=1,--defsym=__ICD2RAM=1,--defsym=__MPLAB_DEBUG=1,--defsym=__DEBUG=1,,-g,--no-relax$(MP_EXTRA_AS_POST)  -mdfp="${DFP_DIR}/xc16"
+	@${RM} ${OBJECTDIR}/badge24.o.d 
+	@${RM} ${OBJECTDIR}/badge24.o 
+	${MP_CC} $(MP_EXTRA_AS_PRE)  badge24.s  -o ${OBJECTDIR}/badge24.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -D__DEBUG   -omf=elf -DXPRJ_default=$(CND_CONF)    -Wa,-MD,"${OBJECTDIR}/badge24.o.d",--defsym=__MPLAB_BUILD=1,--defsym=__ICD2RAM=1,--defsym=__MPLAB_DEBUG=1,--defsym=__DEBUG=1,,-g,--no-relax$(MP_EXTRA_AS_POST)  -mdfp="${DFP_DIR}/xc16"
 	
 else
-${OBJECTDIR}/badge22.o: badge22.s  .generated_files/flags/default/77b5515e8aa8534750110b43619161945f171651 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/badge24.o: badge24.s  .generated_files/flags/default/479b3e04dc91fb81ed6a99dadc1d98c59616975f .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/badge22.o.d 
-	@${RM} ${OBJECTDIR}/badge22.o 
-	${MP_CC} $(MP_EXTRA_AS_PRE)  badge22.s  -o ${OBJECTDIR}/badge22.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -omf=elf -DXPRJ_default=$(CND_CONF)    -Wa,-MD,"${OBJECTDIR}/badge22.o.d",--defsym=__MPLAB_BUILD=1,-g,--no-relax$(MP_EXTRA_AS_POST)  -mdfp="${DFP_DIR}/xc16"
+	@${RM} ${OBJECTDIR}/badge24.o.d 
+	@${RM} ${OBJECTDIR}/badge24.o 
+	${MP_CC} $(MP_EXTRA_AS_PRE)  badge24.s  -o ${OBJECTDIR}/badge24.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -omf=elf -DXPRJ_default=$(CND_CONF)    -Wa,-MD,"${OBJECTDIR}/badge24.o.d",--defsym=__MPLAB_BUILD=1,-g,--no-relax$(MP_EXTRA_AS_POST)  -mdfp="${DFP_DIR}/xc16"
 	
 endif
 

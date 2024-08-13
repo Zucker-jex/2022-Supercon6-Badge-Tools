@@ -18,7 +18,7 @@ Command:
   -Ld:/program files/microchip/xc16/v2.10/bin/bin/../../support/dsPIC33C/gld \
   -Ld:/program files/microchip/xc16/v2.10/bin/bin/../../support/dsPIC33E/gld \
   -Ld:/program files/microchip/xc16/v2.10/bin/bin/../../support/dsPIC33F/gld \
-  build/default/production/badge22.o \
+  build/default/production/badge24.o \
   --local-stack \
   --defsym=__MPLAB_BUILD=1 \
   -Tp24FJ256GA704.gld.00 \
@@ -141,7 +141,7 @@ FDEVOPT1         0x02af2c           0x000002
 
 Linker script and memory map
 
-LOAD build/default/production/badge22.o
+LOAD build/default/production/badge24.o
                     0x0001                  __MPLAB_BUILD = 0x1
 LOAD pPIC24Fxxx
 LOAD d:/program files/microchip/xc16/v2.10/bin/bin/../../lib\libfx-elf.a
@@ -190,55 +190,55 @@ usercode
 
 __FSEC            0x02af00          0x2
  *(__FSEC.sec*)
- __FSEC.sec       0x02af00          0x2 build/default/production/badge22.o
+ __FSEC.sec       0x02af00          0x2 build/default/production/badge24.o
 
 __FBSLIM          0x02af10          0x2
  *(__FBSLIM.sec*)
- __FBSLIM.sec     0x02af10          0x2 build/default/production/badge22.o
+ __FBSLIM.sec     0x02af10          0x2 build/default/production/badge24.o
 
 __FSIGN
  *(__FSIGN.sec*)
 
 __FOSCSEL         0x02af18          0x2
  *(__FOSCSEL.sec*)
- __FOSCSEL.sec    0x02af18          0x2 build/default/production/badge22.o
+ __FOSCSEL.sec    0x02af18          0x2 build/default/production/badge24.o
 
 __FOSC            0x02af1c          0x2
  *(__FOSC.sec*)
- __FOSC.sec       0x02af1c          0x2 build/default/production/badge22.o
+ __FOSC.sec       0x02af1c          0x2 build/default/production/badge24.o
 
 __FWDT            0x02af20          0x2
  *(__FWDT.sec*)
- __FWDT.sec       0x02af20          0x2 build/default/production/badge22.o
+ __FWDT.sec       0x02af20          0x2 build/default/production/badge24.o
 
 __FPOR            0x02af24          0x2
  *(__FPOR.sec*)
- __FPOR.sec       0x02af24          0x2 build/default/production/badge22.o
+ __FPOR.sec       0x02af24          0x2 build/default/production/badge24.o
 
 __FICD            0x02af28          0x2
  *(__FICD.sec*)
- __FICD.sec       0x02af28          0x2 build/default/production/badge22.o
+ __FICD.sec       0x02af28          0x2 build/default/production/badge24.o
 
 __FDEVOPT1        0x02af2c          0x2
  *(__FDEVOPT1.sec*)
  __FDEVOPT1.sec
-                  0x02af2c          0x2 build/default/production/badge22.o
+                  0x02af2c          0x2 build/default/production/badge24.o
 
 .comment
  *(.comment)
 
 .debug_info       0x000000         0x89
  *(.debug_info)
- .debug_info      0x000000         0x89 build/default/production/badge22.o
+ .debug_info      0x000000         0x89 build/default/production/badge24.o
  *(.gnu.linkonce.wi.*)
 
 .debug_abbrev     0x000000         0x14
  *(.debug_abbrev)
- .debug_abbrev    0x000000         0x14 build/default/production/badge22.o
+ .debug_abbrev    0x000000         0x14 build/default/production/badge24.o
 
 .debug_line       0x000000       0x1221
  *(.debug_line)
- .debug_line      0x000000       0x1221 build/default/production/badge22.o
+ .debug_line      0x000000       0x1221 build/default/production/badge24.o
 
 .debug_frame
  *(.debug_frame)
@@ -261,7 +261,7 @@ __FDEVOPT1        0x02af2c          0x2
 .debug_aranges    0x000000         0x20
  *(.debug_aranges)
  .debug_aranges
-                  0x000000         0x20 build/default/production/badge22.o
+                  0x000000         0x20 build/default/production/badge24.o
                     0x0000                  WREG0 = 0x0
                     0x0000                  _WREG0 = 0x0
                     0x0002                  WREG1 = 0x2
@@ -1700,40 +1700,40 @@ __c30_signature
                   0x000020          0x6 d:/program files/microchip/xc16/v2.10/bin/bin/../../lib\libc99-pic30-elf.a(data_init_24.o)
 
 .bss                0x0800        0x1e2
- .bss               0x0800        0x1e2 build/default/production/badge22.o
+ .bss               0x0800        0x1e2 build/default/production/badge24.o
 
 .ivt._T1Interrupt
                   0x00001a          0x2
  .ivt._T1Interrupt
-                  0x00001a          0x2 build/default/production/badge22.o
+                  0x00001a          0x2 build/default/production/badge24.o
 
 .ivt._T3Interrupt
                   0x000024          0x2
  .ivt._T3Interrupt
-                  0x000024          0x2 build/default/production/badge22.o
+                  0x000024          0x2 build/default/production/badge24.o
 
 .ivt._U1RXInterrupt
                   0x00002a          0x2
  .ivt._U1RXInterrupt
-                  0x00002a          0x2 build/default/production/badge22.o
+                  0x00002a          0x2 build/default/production/badge24.o
 
 .ivt._U1ErrInterrupt
                   0x000096          0x2
  .ivt._U1ErrInterrupt
-                  0x000096          0x2 build/default/production/badge22.o
+                  0x000096          0x2 build/default/production/badge24.o
 
 .ivt._U2RXInterrupt
                   0x000050          0x2
  .ivt._U2RXInterrupt
-                  0x000050          0x2 build/default/production/badge22.o
+                  0x000050          0x2 build/default/production/badge24.o
 
 .ivt._U2ErrInterrupt
                   0x000098          0x2
  .ivt._U2ErrInterrupt
-                  0x000098          0x2 build/default/production/badge22.o
+                  0x000098          0x2 build/default/production/badge24.o
 
 .text             0x0001be       0x40c8
- .text            0x0001be       0x40c8 build/default/production/badge22.o
+ .text            0x0001be       0x40c8 build/default/production/badge24.o
                   0x000204                  __reset
                   0x00100e                  __T1Interrupt
                   0x001012                  __T3Interrupt
