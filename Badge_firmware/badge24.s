@@ -17,11 +17,12 @@
 .equ	autorpt_start, 80	; ×10 ms (200/2 Hz)
 .equ	autorpt_next, 15	; ×10 ms (200/2 Hz)
 
-.equ	Ver, 1
-.equ	Rev, 3
+.equ	Ver, 2
+.equ	Rev, 5
 .equ	Year, 24
 .equ	Month, 8
 .equ	Day, 13
+.equ	Maker, 32
 
 .include	 "p24FJ256GA704.inc"
 .include	 "macros.inc"
@@ -293,13 +294,14 @@ __reset:
 	.org	0x1000-0x1BE, 0xFF	;   * * *   0x1000 (fill 0xFF's)
 ; general segment
 	.ascii	"GENS"		; general segment start
-; Ver/Rev/Year/Month/Day
+; Ver/Rev/Year/Month/Day/Maker
 ver_data:
 	.word	Ver
 	.word	Rev
 	.word	Year
 	.word	Month
 	.word	Day
+	.word	Maker
 ; IVT 
 .global __T1Interrupt		; must be @ 0x1000
 __T1Interrupt:
@@ -417,14 +419,15 @@ chs_loop:
 	return
 
 ;-----------------------
-show_vrymd:	; show Ver/Rev/Year/Month/Day
+show_vrymd:	; show Ver/Rev/Year/Month/Day/Maker
 	mov	#Ram+0,w1
 	mov	#tbloffset(ver_data),w3
 	call	vrymd
 	call	vrymd
 	call	vrymd
 	call	vrymd
-vrymd:			; Ver / Rev / Year / Month / Day
+	call	vrymd
+vrymd:			; Ver/Rev/Year/Month/Day/Maker
 	tblrdl	[w3++],w2
 	and	w2,#0xF,w0
 	mov.b	w0,[w1]

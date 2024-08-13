@@ -66,10 +66,10 @@ Default Scalar Model: Small
 section                    address   length (PC units)   length (bytes) (dec)
 -------                    -------   -----------------   --------------------
 .text                        0x100                0xbe           0x11d  (285)
-.text                        0x1be              0x372c          0x52c2  (21186)
-.dinit                      0x38ea                 0x8             0xc  (12)
+.text                        0x1be              0x3732          0x52cb  (21195)
+.dinit                      0x38f0                 0x8             0xc  (12)
 
-                 Total "program" memory used (bytes):         0x53eb  (21483) 8%
+                 Total "program" memory used (bytes):         0x53f4  (21492) 8%
 
 
 "data" Memory  [Origin = 0x800, Length = 0x4000]
@@ -97,26 +97,26 @@ External Symbols in Program Memory (by address):
                   0x000106                  __data_init
                   0x0001b8                  __DefaultInterrupt
                   0x000204                  __reset
-                  0x00100e                  __T1Interrupt
-                  0x001012                  __T3Interrupt
-                  0x001016                  _INT1Interrupt
-                  0x00101a                  _INT2Interrupt
-                  0x00101e                  __U1RXInterrupt
-                  0x001022                  __U1ErrInterrupt
-                  0x001026                  __U2RXInterrupt
-                  0x00102a                  __U2ErrInterrupt
+                  0x001010                  __T1Interrupt
+                  0x001014                  __T3Interrupt
+                  0x001018                  _INT1Interrupt
+                  0x00101c                  _INT2Interrupt
+                  0x001020                  __U1RXInterrupt
+                  0x001024                  __U1ErrInterrupt
+                  0x001028                  __U2RXInterrupt
+                  0x00102c                  __U2ErrInterrupt
 
 External Symbols in Program Memory (by name):
 
-                  0x001016                  _INT1Interrupt
-                  0x00101a                  _INT2Interrupt
+                  0x001018                  _INT1Interrupt
+                  0x00101c                  _INT2Interrupt
                   0x0001b8                  __DefaultInterrupt
-                  0x00100e                  __T1Interrupt
-                  0x001012                  __T3Interrupt
-                  0x001022                  __U1ErrInterrupt
-                  0x00101e                  __U1RXInterrupt
-                  0x00102a                  __U2ErrInterrupt
-                  0x001026                  __U2RXInterrupt
+                  0x001010                  __T1Interrupt
+                  0x001014                  __T3Interrupt
+                  0x001024                  __U1ErrInterrupt
+                  0x001020                  __U1RXInterrupt
+                  0x00102c                  __U2ErrInterrupt
+                  0x001028                  __U2RXInterrupt
                   0x000106                  __data_init
                   0x000106                  __data_init_da
                   0x000204                  __reset
@@ -236,9 +236,9 @@ __FDEVOPT1        0x02af2c          0x2
  *(.debug_abbrev)
  .debug_abbrev    0x000000         0x14 build/default/production/badge24.o
 
-.debug_line       0x000000       0x11df
+.debug_line       0x000000       0x11e0
  *(.debug_line)
- .debug_line      0x000000       0x11df build/default/production/badge24.o
+ .debug_line      0x000000       0x11e0 build/default/production/badge24.o
 
 .debug_frame
  *(.debug_frame)
@@ -1732,17 +1732,17 @@ __c30_signature
  .ivt._U2ErrInterrupt
                   0x000098          0x2 build/default/production/badge24.o
 
-.text             0x0001be       0x372c
- .text            0x0001be       0x372c build/default/production/badge24.o
+.text             0x0001be       0x3732
+ .text            0x0001be       0x3732 build/default/production/badge24.o
                   0x000204                  __reset
-                  0x00100e                  __T1Interrupt
-                  0x001012                  __T3Interrupt
-                  0x001016                  _INT1Interrupt
-                  0x00101a                  _INT2Interrupt
-                  0x00101e                  __U1RXInterrupt
-                  0x001022                  __U1ErrInterrupt
-                  0x001026                  __U2RXInterrupt
-                  0x00102a                  __U2ErrInterrupt
+                  0x001010                  __T1Interrupt
+                  0x001014                  __T3Interrupt
+                  0x001018                  _INT1Interrupt
+                  0x00101c                  _INT2Interrupt
+                  0x001020                  __U1RXInterrupt
+                  0x001024                  __U1ErrInterrupt
+                  0x001028                  __U2RXInterrupt
+                  0x00102c                  __U2ErrInterrupt
 
-.dinit            0x0038ea          0x8
- .dinit           0x0038ea          0x8 data_init
+.dinit            0x0038f0          0x8
+ .dinit           0x0038f0          0x8 data_init
