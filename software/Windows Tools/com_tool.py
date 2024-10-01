@@ -34,11 +34,11 @@ if __name__ == "__main__":
     import sys
 
     if len(sys.argv) != 2:
-        print("Usage: python win_flash.py <file>")
+        print("Usage: python com_tool.py <file>")
         sys.exit(1)
 
     file_to_send = sys.argv[1]
-    serial_port = "COM18"
+    serial_port = "COM21"
     baud_rate = 9600
 
     send_file_via_serial(serial_port, baud_rate, file_to_send)

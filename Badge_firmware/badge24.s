@@ -17,11 +17,11 @@
 .equ	autorpt_start, 80	; ×10 ms (200/2 Hz)
 .equ	autorpt_next, 15	; ×10 ms (200/2 Hz)
 
-.equ	Ver, 2
-.equ	Rev, 5
+.equ	Ver, 3
+.equ	Rev, 2
 .equ	Year, 24
-.equ	Month, 8
-.equ	Day, 13
+.equ	Month, 10
+.equ	Day, 01
 .equ	Maker, 32
 
 .include	 "p24FJ256GA704.inc"

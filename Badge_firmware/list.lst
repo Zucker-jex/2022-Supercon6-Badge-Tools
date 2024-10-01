@@ -3528,11 +3528,11 @@ boot_burn1k:		; burn 1K instructions, 3K bytes + 1K dummy 0's
     1002:	4e 53 00    	nop       
 
 00001004 <ver_data>:
-    1004:	02 00 00    	nop       
-    1006:	05 00 00    	nop       
+    1004:	03 00 00    	nop       
+    1006:	02 00 00    	nop       
     1008:	18 00 00    	nop       
-    100a:	08 00 00    	nop       
-    100c:	0d 00 00    	nop       
+    100a:	0a 00 00    	nop       
+    100c:	01 00 00    	nop       
     100e:	20 00 00    	nop       
 
 00001010 <__T1Interrupt>:
